@@ -1,0 +1,35 @@
+﻿@model IEnumerable<string>
+
+<a class="btn btn-block btn-outline-secondary"
+   asp-action="Index" asp-controller="Home"
+   asp-route-category="">
+    Home
+</a>
+
+<a class="btn btn-block btn-outline-secondary"
+   asp-action="AboutUs" asp-controller="Home"
+   asp-route-category="">
+    About US
+</a>
+
+<a class="btn btn-block btn-outline-secondary"
+   asp-action="ContactUs" asp-controller="Home"
+   asp-route-category="">
+    Contact US
+</a>
+
+<a class="btn btn-block btn-outline-secondary"
+   asp-action="PerformTran" asp-controller="Home"
+   asp-route-category="">
+    Perform Transaction
+</a>
+
+@foreach (string category in Model)
+{
+    //BJ: asp-route-category and asp-route-productPage should match with HomeController Index
+		 <a class="btn btn-block btn-outline-secondary"
+			asp-action="Index" asp-controller="Home"
+			asp-route-category="@category" asp-route-productPage="1">
+			 @category
+		 </a>
+	}
