@@ -3,9 +3,15 @@
 
 @model Sample_App.ViewModels.ProductListViewModel
 
+@ViewBag.MyScript
+<br />
+@ViewBag.encodedValue
+@*@Html.Raw(ViewBag.MyScript)*@ 
+
 @*BJ:Dont use HTML helper as it is bit complex syntax but use TagHelper as it is easier to syntax*@
 @*@Html.ActionLink("Add Product", "Create","Home")*@
 
+<br />
 <a asp-action="Create" asp-controller="Home"> Add Product</a>
 @foreach (var p in Model.Products)
 {

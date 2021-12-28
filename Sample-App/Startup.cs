@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Sample_App.Extensions;
+using Sample_App.Filters;
 using Sample_App.Models;
 using Sample_App.Services;
 using System;
@@ -61,6 +62,8 @@ namespace Sample_App
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<BankOfAmericaContext>();
+
+            services.AddScoped<CustomExceptionFilter>();//BJ:Activate CustomException filter
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

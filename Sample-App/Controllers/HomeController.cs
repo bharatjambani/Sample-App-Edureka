@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Sample_App.Filters;
 using Sample_App.Models;
 using Sample_App.Services;
 using Sample_App.ViewModels;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace Sample_App.Controllers
@@ -25,14 +27,16 @@ namespace Sample_App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IFileProvider _fileProvider;
         private readonly IMapper _mapper;
+        private readonly UrlEncoder _urlEncoder;
         public int PageSize = 4;
 
-        public HomeController(IStoreRepo repo, ILogger<HomeController> logger, IFileProvider fileProvider, IMapper mapper)
+        public HomeController(IStoreRepo repo, ILogger<HomeController> logger, IFileProvider fileProvider, IMapper mapper, UrlEncoder urlEncoder)
         {
             _repo = repo;
             _logger = logger;
             _fileProvider = fileProvider;
             _mapper = mapper;
+            _urlEncoder = urlEncoder;
         }
         //public HomeController(IRandomService randomService, IRandomWrapper randomWrapper)
         //{
@@ -46,6 +50,10 @@ namespace Sample_App.Controllers
             //return View();
             //return Content(result);
 
+            ViewBag.MyScript = "<script>alert('Hello');</script>";
+            var example = "\"Quoted value with spaces and &\"";
+
+            ViewBag.encodedValue = _urlEncoder.Encode(example);
             _logger.LogInformation($"Index Action called {category} for {productPage}");
             var products = _repo.Products
                 .Where(p => category == null || p.Category == category)
@@ -154,8 +162,17 @@ namespace Sample_App.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(CustomExceptionFilter))]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(ProductEditModel prod)
         {
+
+            //BJ:Exception filter => If price is 0 then navigate to Custom error page
+
+            if (prod.Price == 0)
+            {
+                throw new Exception("Pls dont add Product with Price=0");
+            }
             if (ModelState.IsValid)
             {
                 //BJ:Below code is not needed as we used mapper package

@@ -1,6 +1,6 @@
 ﻿@model ProductEditModel
 <h3>Add New Painting</h3>
-<form asp-action="Create" asp-controller="Home">
+<form asp-action="Create" asp-controller="Home" asp-antiforgery="true">
     @*<div class="form-group">
         <label asp-for="@Model.ProductID">ID</label>
         <input type="text" asp-for="@Model.ProductID" class="form-control" placeholder="ID">
